@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean id="detailGofood"
+		class="com.lawencon.ojol.model.DetailGofood" scope="prototype"></bean>
+	<bean id="driver" class="com.lawencon.ojol.model.Driver"
+		scope="prototype"></bean>
+	<bean id="headerGofood"
+		class="com.lawencon.ojol.model.HeaderGofood" scope="prototype"></bean>
+	<bean id="jenisPaket" class="com.lawencon.ojol.model.JenisPaket"
+		scope="prototype"></bean>
+	<bean id="menu" class="com.lawencon.ojol.model.Menu"
+		scope="prototype"></bean>
+	<bean id="transaksiGojeg"
+		class="com.lawencon.ojol.model.TransaksiGojeg" scope="prototype"></bean>
+	<bean id="transaksiGosend"
+		class="com.lawencon.ojol.model.TransaksiGosend" scope="prototype"></bean>
+
+
+	<bean id="detailGofoodService"
+		class="com.lawencon.ojol.service.DetailGofoodServiceImpl"></bean>
+	<bean id="driverService"
+		class="com.lawencon.ojol.service.DriverServiceImpl"></bean>
+	<bean id="headerGofoodService"
+		class="com.lawencon.ojol.service.HeaderGofoodServiceImpl"></bean>
+	<bean id="jenisPaketService"
+		class="com.lawencon.ojol.service.JenisPaketServiceImpl"></bean>
+	<bean id="menuService"
+		class="com.lawencon.ojol.service.MenuServiceImpl"></bean>
+	<bean id="transaksiGojegService"
+		class="com.lawencon.ojol.service.TransaksiGojegServiceImpl"></bean>
+	<bean id="transaksiGosendService"
+		class="com.lawencon.ojol.service.TransaksiGosendServiceImpl"></bean>
+
+</beans>
