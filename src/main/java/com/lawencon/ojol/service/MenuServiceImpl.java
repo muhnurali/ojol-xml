@@ -24,4 +24,24 @@ public class MenuServiceImpl implements MenuService{
 		return list.get(id-1);
 	}
 
+	@Override
+	public void showMenuUtama() throws Exception {
+		System.out.println("===Aplikasi Gojeg===");
+		System.out.println("1. Gojeg");
+		System.out.println("2. Gofood");
+		System.out.println("3. Gosend");
+		System.out.println("4. History");
+		System.out.println("0. Exit");
+		System.out.print("Pilih menu : ");
+	}
+	
+	@Override
+	public void showMenuHistory() throws Exception{
+		System.out.println("\n===History===");
+		System.out.println("1. Gojeg");
+		System.out.println("2. Gofood");
+		System.out.println("3. Gosend");
+		System.out.println("99. Kembali");
+	}
+
 }

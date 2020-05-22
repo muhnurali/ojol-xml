@@ -5,7 +5,7 @@ import java.util.List;
 public class HeaderGofood {
 
 	private int idTransaksiGofood, total;
-	private String lokasi;	
+	private String lokasi;
 	private List<DetailGofood> detail;
 	private Driver driver;
 
@@ -28,20 +28,25 @@ public class HeaderGofood {
 	public int getIdTransaksiGofood() {
 		return idTransaksiGofood;
 	}
+
 	public void setIdTransaksiGofood(int idTransaksiGofood) {
 		this.idTransaksiGofood = idTransaksiGofood;
 	}
+
 	public int getTotal() {
 		return total;
 	}
+
 	public void setTotal(int total) {
 		this.total = total;
 	}
+
 	public String getLokasi() {
 		return lokasi;
 	}
+
 	public void setLokasi(String lokasi) {
 		this.lokasi = lokasi;
 	}
-	
+
 }

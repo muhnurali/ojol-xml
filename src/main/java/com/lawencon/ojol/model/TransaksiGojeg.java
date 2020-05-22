@@ -1,13 +1,14 @@
 package com.lawencon.ojol.model;
 
 public class TransaksiGojeg {
-	
+
 	private int idTransaksiGojeg, harga;
 	private String lokasi, tujuan;
 	private Driver driver;
-	
-	public TransaksiGojeg() {}
-	
+
+	public TransaksiGojeg() {
+	}
+
 	public TransaksiGojeg(int idTransaksiGojeg, int harga, String lokasi, String tujuan, Driver driver) {
 		this.idTransaksiGojeg = idTransaksiGojeg;
 		this.harga = harga;
@@ -55,6 +56,5 @@ public class TransaksiGojeg {
 	public void setDriver(Driver driver) {
 		this.driver = driver;
 	}
-	
 
 }

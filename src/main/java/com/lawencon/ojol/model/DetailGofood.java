@@ -3,12 +3,13 @@ package com.lawencon.ojol.model;
 import java.util.List;
 
 public class DetailGofood {
-	
+
 	private int id;
 	private String namaRestoran;
 	private List<Menu> menu;
-	
-	public DetailGofood() {}	
+
+	public DetailGofood() {
+	}
 
 	public int getId() {
 		return id;
@@ -33,7 +34,5 @@ public class DetailGofood {
 	public void setMenu(List<Menu> menu) {
 		this.menu = menu;
 	}
-	
-	
 
 }

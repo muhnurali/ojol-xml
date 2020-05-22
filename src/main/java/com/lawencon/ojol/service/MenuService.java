@@ -6,6 +6,12 @@ import com.lawencon.ojol.model.Menu;
 
 public interface MenuService {
 	void insertMenu(List<Menu> list, Menu menu) throws Exception;
+
 	void showMenu(List<Menu> list) throws Exception;
-	Menu seletMenu (List<Menu> list, int id)throws Exception;
+
+	Menu seletMenu(List<Menu> list, int id) throws Exception;
+
+	void showMenuUtama() throws Exception;
+
+	void showMenuHistory() throws Exception;
 }

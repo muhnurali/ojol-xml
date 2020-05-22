@@ -3,12 +3,8 @@ package com.lawencon.ojol;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-import java.util.concurrent.ThreadLocalRandom;
-
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-
-import com.lawencon.ojol.model.Constants;
 import com.lawencon.ojol.model.DetailGofood;
 import com.lawencon.ojol.model.Driver;
 import com.lawencon.ojol.model.HeaderGofood;
@@ -42,7 +38,7 @@ public class App {
 		ApplicationContext context = new ClassPathXmlApplicationContext("beans-setter.xml");
 
 		Scanner sc = new Scanner(System.in);
-		int menu = 0;
+		int menu = 99999;
 		boolean kondisi = true;
 
 		TransaksiGojegService transaksiGojegService = context.getBean("transaksiGojegService",
@@ -116,49 +112,13 @@ public class App {
 		detailService.insertGofood(listDetail, detailGofood);
 
 		do {
+			menuService.showMenuUtama();
 			TransaksiGojeg transaksiGojeg = context.getBean("transaksiGojeg", TransaksiGojeg.class);
-
-			System.out.println("===Aplikasi Gojeg===");
-			System.out.println("1. Gojeg");
-			System.out.println("2. Gofood");
-			System.out.println("3. Gosend");
-			System.out.println("4. History");
-			System.out.println("0. Exit");
-			System.out.print("Pilih menu : ");
 			try {
 				menu = sc.nextInt();
 				switch (menu) {
 				case 1:
-					sc.nextLine();
-					System.out.println("\n===Gojeg====");
-					driver = driverService.getDriver(menu);
-					transaksiGojeg.setIdTransaksiGojeg(ThreadLocalRandom.current().nextInt());
-					transaksiGojeg.setDriver(driver);
-					do {
-						System.out.print("Masukan Lokasi Anda : ");
-						transaksiGojeg.setLokasi(sc.nextLine());
-						if (transaksiGojeg.getLokasi().equals("")) {
-							System.out.println("Inputan tidak boleh kosong");
-						}
-					} while (transaksiGojeg.getLokasi().equals(""));
-					do {
-						System.out.print("Masukan Tujuan Anda : ");
-						transaksiGojeg.setTujuan(sc.nextLine());
-						if (transaksiGojeg.getTujuan().equals("")) {
-							System.out.println("Inputan tidak boleh kosong");
-						}
-					} while (transaksiGojeg.getTujuan().equals(""));
-					transaksiGojeg.setHarga(
-							(transaksiGojeg.getTujuan().length() + transaksiGojeg.getLokasi().length()) * Constants.HARGA_GOJEG);
-					System.out.println("Harga : Rp. " + transaksiGojeg.getHarga());
-					System.out.println("Mencari Driver...");
-					Thread.sleep(3000);
-					System.out.println("===Driver Ditemukan===");
-					System.out.println("Nama Driver : " + driver.getNama());
-					System.out.println("Plat No : " + driver.getPlat());
-					System.out.println("Jenis Motor : " + driver.getMotor());
-					System.out.println();
-					transaksiGojegService.insertTransaksi(listTransaksiGojeg, transaksiGojeg);
+					transaksiGojegService.transaksiGojeg(sc, driver, transaksiGojeg, listTransaksiGojeg, driverService);
 					break;
 				case 2:
 					HeaderGofood headerGofood = context.getBean("headerGofood", HeaderGofood.class);
@@ -166,185 +126,20 @@ public class App {
 					List<DetailGofood> listDetailFix = new ArrayList<>();
 					List<Menu> listMenuFix = new ArrayList<>();
 					int total = 0;
-					do {			
-						sc.nextLine();
-						System.out.println("\n===Gofood====");
-						driver = driverService.getDriver(menu);
-						headerGofood.setIdTransaksiGofood(ThreadLocalRandom.current().nextInt());
-						headerGofood.setDriver(driver);
-						do {
-							System.out.print("Masukan Lokasi Anda : ");
-							headerGofood.setLokasi(sc.nextLine());
-							if (headerGofood.getLokasi().equals("")) {
-								System.out.println("Inputan tidak boleh kosong");
-							}
-						} while (headerGofood.getLokasi().equals(""));
-
-						detailService.showDetail(listDetail);
-						do {
-							try {
-								System.out.print("Pilih Restoran : ");
-								menu = sc.nextInt();
-								detailGofoodFix = detailService.selectDetail(listDetail, menu);
-								kondisi = true;
-							} catch (Exception e) {
-								kondisi =false;
-								System.out.println("Menu Tidak Ditemukan\n");
-								sc.nextLine();
-							}
-						} while (kondisi == false || detailGofoodFix == null);
-
-						
-						do {
-							do {
-								try {
-									menuService.showMenu(listMenu);
-									System.out.print("Pilih Pesanan : ");
-									menu = sc.nextInt();
-									menu0 = menuService.seletMenu(listMenu, menu);
-									kondisi = true;
-								} catch (Exception e) {
-									System.out.println("Pesanan Tidak Ditemukan\n");
-									kondisi =false;
-									sc.nextLine();
-								}
-							} while (kondisi==false || menu0 == null);
-							do {
-								System.out.print("Banyaknya : ");
-								try {
-									menu0.setQty(sc.nextInt());
-									if (menu0.getQty() == 0) {
-										System.out.println("Inputan tidak boleh nol");
-										kondisi = false;
-									} else {
-										kondisi = true;
-									}
-								} catch (Exception e) {
-									System.out.println("Inputan tidak boleh huruf");
-									kondisi = false;
-									sc.nextLine();
-								}
-							} while (menu0.getQty() == 0 || kondisi == false);
-							
-							menuService.insertMenu(listMenuFix, menu0);
-							detailGofood.setMenu(listMenuFix);
-
-							total = total + (menu0.getHarga() * menu0.getQty());
-							headerGofood.setTotal(total + (Constants.HARGA_GOFOOD * headerGofood.getLokasi().length()));
-							detailService.insertGofood(listDetailFix, detailGofoodFix);
-							headerGofood.setDetail(listDetailFix);
-							System.out.println("===Menu===");
-							System.out.println("9. Tambah Pesanan");
-							System.out.println("99. Sudah");
-							do {
-								System.out.print("Pilih Menu : ");
-								try {
-									menu = sc.nextInt();
-									if (menu == 9 || menu == 99) {
-										kondisi = true;
-									} else {
-										System.out.println("Menu tidak ditemukan");
-										kondisi = false;
-									}
-								} catch (Exception e) {
-									System.out.println("Inputan tidak boleh huruf");
-									kondisi = false;
-								}
-								sc.nextLine();
-							} while (kondisi == false);
-						} while (menu == 9);
-						headerService.insertTransaksi(listHeader, headerGofood);
-					} while (menu == 2);
-					System.out.println("Harga : Rp. " + headerGofood.getTotal());
-					System.out.println("Mencari Driver...");
-					Thread.sleep(3000);
-					System.out.println("===Driver Ditemukan===");
-					System.out.println("Nama Driver : " + driver.getNama());
-					System.out.println("Plat No : " + driver.getPlat());
-					System.out.println("Jenis Motor : " + driver.getMotor());
-					System.out.println();
+					headerService.transaksiGofood(sc, driver, driverService, menu, headerGofood, listDetail,
+							detailService, detailGofoodFix, kondisi, menuService, listMenu, menu0, listMenuFix,
+							detailGofoodFix, total, listDetailFix, listHeader);
 					break;
 				case 3:
 					TransaksiGosend transaksiGosend = context.getBean("transaksiGosend", TransaksiGosend.class);
 					JenisPaket jenisPaket = context.getBean("jenisPaket", JenisPaket.class);
-
-					sc.nextLine();
-					System.out.println("\n===Gosend====");
-					driver = driverService.getDriver(menu);
-					transaksiGosend.setIdTransaksiGosend(ThreadLocalRandom.current().nextInt());
-					transaksiGosend.setDriver(driver);
-					do {
-						System.out.print("Masukan Lokasi Anda : ");
-						transaksiGosend.setLokasi(sc.nextLine());
-						if (transaksiGosend.getLokasi().equals("")) {
-							System.out.println("Inputan tidak boleh kosong");
-						}
-					} while (transaksiGosend.getLokasi().equals(""));
-					do {
-						System.out.print("Masukan Tujuan Paket : ");
-						transaksiGosend.setTujuan(sc.nextLine());
-						if (transaksiGosend.getTujuan().equals("")) {
-							System.out.println("Inputan tidak boleh kosong");
-						}
-					} while (transaksiGosend.getTujuan().equals(""));
-					do {
-						jenisPaketService.showJenisPaket(listJenisPaket);
-						try {
-							System.out.print("Pilih Jenis Paket : ");
-							menu = sc.nextInt();
-							if (menu > 0 && menu < 4) {
-								jenisPaket = jenisPaketService.getById(listJenisPaket, menu);
-								transaksiGosend.setJenisPaket(jenisPaket);
-								kondisi=true;
-								break;
-							} else {
-								System.out.println("Menu Tidak Ditemukan\n");
-								kondisi =false;
-								continue;
-							}
-						} catch (Exception e) {
-							System.out.println("Inputan tidak boleh huruf\n");
-							kondisi = false;
-							sc.nextLine();
-						}
-					} while ( kondisi == false);
-					do {
-						System.out.print("Berat Paket (Kg) : ");
-						try {
-							transaksiGosend.setBerat(sc.nextInt());
-							if (transaksiGosend.getBerat() == 0) {
-								System.out.println("Inputan tidak boleh nol\n");
-								kondisi = false;
-							} else {
-								kondisi = true;
-								break;
-							}
-						} catch (Exception e) {
-							System.out.println("Inputan tidak boleh huruf\n");
-							kondisi = false;
-							sc.nextLine();
-						}
-					} while (kondisi == false);
-					transaksiGosend.setHarga(
-							Constants.HARGA_GOSEND * (transaksiGosend.getLokasi().length() + transaksiGosend.getTujuan().length())
-									+ (transaksiGosend.getBerat() * jenisPaket.getHarga()));
-					System.out.println("Harga : Rp. " + transaksiGosend.getHarga());
-					System.out.println("Mencari Driver...");
-					Thread.sleep(3000);
-					System.out.println("===Driver Ditemukan===");
-					System.out.println("Nama Driver : " + driver.getNama());
-					System.out.println("Plat No : " + driver.getPlat());
-					System.out.println("Jenis Motor : " + driver.getMotor());
-					System.out.println();
-					transaksiGosendService.insertTransaksi(listTransaksiGosend, transaksiGosend);
+					transaksiGosendService.transaksiGosend(sc, driver, driverService, transaksiGosend,
+							jenisPaketService, listJenisPaket, menu, jenisPaket, kondisi, transaksiGosendService,
+							listTransaksiGosend);
 					break;
 				case 4:
 					do {
-						System.out.println("\n===History===");
-						System.out.println("1. Gojeg");
-						System.out.println("2. Gofood");
-						System.out.println("3. Gosend");
-						System.out.println("99. Kembali");
+						menuService.showMenuHistory();
 						do {
 							System.out.print("Pilih Menu : ");
 							try {
@@ -364,7 +159,6 @@ public class App {
 						case 2:
 							try {
 								headerService.showTransaksiGofood(listHeader);
-
 							} catch (Exception e) {
 								e.printStackTrace();
 							}
@@ -376,12 +170,12 @@ public class App {
 							System.out.println();
 							break;
 						default:
-							System.out.println("\nMenu Tidak Ditemukan");
+							System.out.println("Menu Tidak Ditemukan");
 							break;
 						}
 					} while (menu != 99);
 					break;
-				case 0 :
+				case 0:
 					System.out.println("=== Terimakasih Sudah Menggunakan Aplikasi Ini ===");
 					System.exit(0);
 					break;
@@ -390,7 +184,7 @@ public class App {
 					break;
 				}
 			} catch (Exception e) {
-				System.out.println("\nInputan Salah, Hanya Angka Yang Diperbolehkan");
+				System.out.println("Inputan Salah, Hanya Angka Yang Diperbolehkan\n");
 				sc.nextLine();
 			}
 		} while (menu != 0);
